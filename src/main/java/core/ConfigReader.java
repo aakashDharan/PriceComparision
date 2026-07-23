@@ -16,7 +16,7 @@ public class ConfigReader {
         // Load from the classpath, not a relative file path — this works
         // identically whether run from IntelliJ, `mvn test`, or a CI runner
         // where the JVM's working directory may not match the project root.
-        try (InputStream is = ConfigReader.class.getClassLoader().getResourceAsStream("config.properties")) {
+        try (InputStream is = ConfigReader.class.getClassLoader().getResourceAsStream("config")) {
             if (is == null) {
                 throw new RuntimeException("config.properties not found on classpath — expected at src/test/resources/config.properties");
             }

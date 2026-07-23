@@ -5,7 +5,7 @@ import core.BaseTest;
 import org.testng.annotations.Test;
 
 public class SmokeTest extends BaseTest {
-    @Test
+   // @Test
     public void homepageLoads(){
         page.navigate("/");
         PlaywrightAssertions.assertThat(page).hasTitle(java

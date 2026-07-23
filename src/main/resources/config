@@ -1,8 +1,8 @@
 # Environment / target app
-base.url=https://www.airbnb.co.in/
+base.url=https://www.airbnb.co.in
 api.base.url=https://www.airbnb.co.in/api
 
 # Browser: chromium | firefox | webkit
 browser=chromium
-headless=true
+headless=false
 slowmo.ms=0
