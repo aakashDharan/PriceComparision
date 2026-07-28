@@ -3,6 +3,8 @@ package pages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
+import java.time.LocalDate;
+
 public class BasePage {
 
     protected final Page page;
@@ -41,6 +43,12 @@ public class BasePage {
 
     public void click(Locator locator){
         locator.click();
+    }
+
+    public Locator dateLocator(LocalDate date) {
+        return page.locator(
+                "[data-state--date-string='" + date + "']"
+        );
     }
 
 }

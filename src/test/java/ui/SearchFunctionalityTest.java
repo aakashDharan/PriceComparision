@@ -1,6 +1,7 @@
 package ui;
 
 import core.BaseTest;
+import models.SearchCriteria;
 import org.testng.annotations.Test;
 import pages.HomePage;
 
@@ -11,10 +12,15 @@ import static io.qameta.allure.Allure.step;
 
 public class SearchFunctionalityTest extends BaseTest {
 
-
     @Test
-    public void getOntoHomePage() {
+    public void getOntoHomePage() throws InterruptedException {
+        String destination = "Canacona, Goa";
+        String searchText = "can";
+        int guestNum = 2;
+
+        SearchCriteria searchParameters = new SearchCriteria(searchText, destination, guestNum);
         HomePage homepage = new HomePage(page);
+
         boolean isPopupPresent;
 
         step("Navigate to the web page.");
@@ -25,6 +31,7 @@ public class SearchFunctionalityTest extends BaseTest {
 
         if(isPopupPresent){
             step("Closed the 'Welcome' pop up.");
+            homepage.closePopup();
         }else {
             step("No 'Welcome' is present.");
         }
@@ -32,6 +39,10 @@ public class SearchFunctionalityTest extends BaseTest {
         step("Verifying if the logo is present.", () -> {
             assertThat(homepage.logo()).isVisible();
         });
+
+        step("Searching for" + guestNum + "in" + destination);
+        homepage.search(searchParameters);
+
 
 
     }
