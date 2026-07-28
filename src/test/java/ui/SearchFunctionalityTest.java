@@ -40,7 +40,7 @@ public class SearchFunctionalityTest extends BaseTest {
             assertThat(homepage.logo()).isVisible();
         });
 
-        step("Searching for" + guestNum + "in" + destination);
+        step("Searching for " + guestNum + " in " + destination);
         homepage.search(searchParameters);
 
 
