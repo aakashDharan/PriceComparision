@@ -5,6 +5,10 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.TimeoutError;
 import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import components.PropertyCard;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchResultPage extends BasePage {
 
@@ -13,6 +17,7 @@ public class SearchResultPage extends BasePage {
     private final Locator popupCross;
     private final Locator dialogAccept;
     private final Locator heading;
+    private final Locator propertyCards;
 
     public SearchResultPage(Page page) {
         super(page);
@@ -30,6 +35,8 @@ public class SearchResultPage extends BasePage {
                 new Page.GetByRoleOptions().setName("Got it"));
 
         heading = page.getByTestId("stays-page-heading");
+
+        propertyCards = page.getByTestId("card-container");
     }
 
 
@@ -49,5 +56,13 @@ public class SearchResultPage extends BasePage {
     public String getTitle(){
         heading.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         return heading.textContent();
+    }
+
+    public List<PropertyCard> getPropertyCards(){
+        List<PropertyCard> cards = new ArrayList<>();
+        for(Locator card : propertyCards.all()){
+            cards.add(new PropertyCard(card, page));
+        }
+        return cards;
     }
 }

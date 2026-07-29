@@ -1,11 +1,13 @@
 package ui;
 
+import components.PropertyCard;
 import core.BaseTest;
 import models.SearchCriteria;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.SearchResultPage;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -36,7 +38,6 @@ public class SearchFunctionalityTest extends BaseTest {
         if(isPopupPresent){
             step("Closed the 'Welcome' pop up.");
             homepage.closePopup();
-            System.out.println("homepage popup closed");
         }else {
             step("No 'Welcome' is present.");
         }
@@ -52,5 +53,8 @@ public class SearchFunctionalityTest extends BaseTest {
         step("Search Successful!!", () ->{
              assertTrue(containsText(searchResult,destination));
         });
+
+        List<PropertyCard> cards = result.getPropertyCards();
+        System.out.println(cards.get(0).getName());
     }
 }
