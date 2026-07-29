@@ -99,13 +99,15 @@ public class HomePage extends BasePage{
 
 
 
-    public void search(SearchCriteria values) throws InterruptedException {
+    public SearchResultPage search(SearchCriteria values) {
         enterDestination(values.getSearchTxt(), values.getDestination());
         checkInDate.click();
         checkOutDate.click();
         guest.click();
         guestNum(values.getGuestNum());
         searchBtn.click();
+
+        return new SearchResultPage(page);
     }
 
    private void guestNum(int num){
@@ -114,4 +116,7 @@ public class HomePage extends BasePage{
         }
     }
 
+//    public boolean ispageLoaded(Locator newPage){
+//        newPage.
+//    }
 }

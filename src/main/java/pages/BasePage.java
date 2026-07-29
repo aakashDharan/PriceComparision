@@ -51,4 +51,9 @@ public class BasePage {
         );
     }
 
+    public boolean isPageLoaded(Locator locator){
+        return locator.isVisible();
+    }
+
+
 }

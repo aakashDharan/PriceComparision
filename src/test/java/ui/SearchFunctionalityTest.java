@@ -4,22 +4,26 @@ import core.BaseTest;
 import models.SearchCriteria;
 import org.testng.annotations.Test;
 import pages.HomePage;
+import pages.SearchResultPage;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static io.qameta.allure.Allure.step;
+import static org.testng.Assert.assertTrue;
 
 public class SearchFunctionalityTest extends BaseTest {
 
     @Test
-    public void getOntoHomePage() throws InterruptedException {
-        String destination = "Canacona, Goa";
+    public void getOntoHomePage() {
+        String destination = "Canacona";
         String searchText = "can";
         int guestNum = 2;
+        String searchResult;
 
         SearchCriteria searchParameters = new SearchCriteria(searchText, destination, guestNum);
         HomePage homepage = new HomePage(page);
+        //SearchResultPage result = new SearchResultPage(page);
 
         boolean isPopupPresent;
 
@@ -32,6 +36,7 @@ public class SearchFunctionalityTest extends BaseTest {
         if(isPopupPresent){
             step("Closed the 'Welcome' pop up.");
             homepage.closePopup();
+            System.out.println("homepage popup closed");
         }else {
             step("No 'Welcome' is present.");
         }
@@ -40,12 +45,12 @@ public class SearchFunctionalityTest extends BaseTest {
             assertThat(homepage.logo()).isVisible();
         });
 
-        step("Searching for " + guestNum + " in " + destination);
-        homepage.search(searchParameters);
+        step("Searching for " + guestNum + " guests in " + destination);
+        SearchResultPage result = homepage.search(searchParameters);
+        searchResult = result.getTitle();
 
-
-
+        step("Search Successful!!", () ->{
+             assertTrue(containsText(searchResult,destination));
+        });
     }
-
-
 }

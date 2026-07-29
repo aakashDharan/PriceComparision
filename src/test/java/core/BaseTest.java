@@ -29,4 +29,12 @@ public class BaseTest {
         }
         PlaywrightFactory.tearDown();
     }
+
+    public boolean containsText(String fullString, String toCheckWord){
+        if(fullString.toLowerCase().contains(toCheckWord.toLowerCase())){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
