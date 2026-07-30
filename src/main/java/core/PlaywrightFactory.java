@@ -2,6 +2,8 @@ package core;
 
 import com.microsoft.playwright.*;
 
+import java.util.List;
+
 public class PlaywrightFactory {
     private static final ThreadLocal<Playwright> playwrightThreadLocal = new ThreadLocal<>();
     private static final ThreadLocal<Browser> browserThreadlocal = new ThreadLocal<>();
@@ -18,7 +20,7 @@ public class PlaywrightFactory {
         Browser browser = launchBrowser(playwright, browserName);
         browserThreadlocal.set(browser);
 
-        BrowserContext context = browser.newContext( new Browser.NewContextOptions().setViewportSize(1336,786)
+        BrowserContext context = browser.newContext( new Browser.NewContextOptions().setViewportSize(null)
                 .setBaseURL(ConfigReader.baseUrl())
         );
 
@@ -37,6 +39,7 @@ public class PlaywrightFactory {
     private static Browser launchBrowser(Playwright playwright, String browserName){
         BrowserType.LaunchOptions options = new BrowserType.LaunchOptions()
                 .setHeadless(ConfigReader.headless())
+                .setArgs(List.of("--start-maximized"))
                 .setSlowMo(ConfigReader.slowMo());
 
         return switch (browserName.toLowerCase()){
@@ -49,7 +52,7 @@ public class PlaywrightFactory {
     public static Page getPage(){
         Page page = pageThreadLocal.get();
         if(page == null){
-            throw new IllegalStateException("Page not initialized for tgis thread - call initBrowser() first");
+            throw new IllegalStateException("Page not initialized for this thread - call initBrowser() first");
         }
         return page;
     }

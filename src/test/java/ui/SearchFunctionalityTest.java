@@ -2,19 +2,22 @@ package ui;
 
 import components.PropertyCard;
 import core.BaseTest;
+import io.qameta.allure.Allure;
 import models.SearchCriteria;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.SearchResultPage;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static io.qameta.allure.Allure.step;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
+//@Listeners(TestListener.class)
 public class SearchFunctionalityTest extends BaseTest {
+
 
     @Test
     public void getOntoHomePage() {
@@ -29,8 +32,10 @@ public class SearchFunctionalityTest extends BaseTest {
 
         boolean isPopupPresent;
 
-        step("Navigate to the web page.");
-        page.navigate("/");
+        step("Navigate to the web page.", () ->{
+            page.navigate("/");
+        });
+
 
         isPopupPresent =  step("Check for 'Welcome' popup",
                homepage::isPopupPresent);
@@ -49,12 +54,20 @@ public class SearchFunctionalityTest extends BaseTest {
         step("Searching for " + guestNum + " guests in " + destination);
         SearchResultPage result = homepage.search(searchParameters);
         searchResult = result.getTitle();
+        result.acceptDialog();
 
         step("Search Successful!!", () ->{
              assertTrue(containsText(searchResult,destination));
         });
 
         List<PropertyCard> cards = result.getPropertyCards();
-        System.out.println(cards.get(0).getName());
+        //System.out.println(cards.get(0).getName());
+
+        step("Properties are displayed.");
+        for (PropertyCard card : cards) {
+            assertNotNull(card.getName());
+            //System.out.println(card.getName());
+            assertFalse(card.getName().trim().isEmpty());
+        }
     }
 }
