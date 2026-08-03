@@ -29,22 +29,31 @@ public class SearchResultPage extends BasePage {
         popup = page.getByRole(AriaRole.DIALOG,
                 new Page.GetByRoleOptions()
                         .setName("Now you’ll see one price for your trip, all fees included."));
-        popup.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        //popup.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
 
         dialogAccept = page.getByRole(AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Got it"));
 
-        heading = page.getByTestId("stays-page-heading");
+       heading = page.getByTestId("stays-page-heading");
+
 
         propertyCards = page.getByTestId("card-container");
     }
 
 
+    public SearchResultPage waitForpage(){
+        page.waitForURL("**/s/**");
+
+        heading.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+
+        return this;
+    }
+
     public boolean isPopupPresent(){
         try {
             popup.waitFor(new Locator.WaitForOptions()
                     .setState(WaitForSelectorState.VISIBLE)
-                    .setTimeout(3000));
+                    .setTimeout(2000));
             return true;
         } catch (TimeoutError e) {
             return false;
@@ -54,6 +63,7 @@ public class SearchResultPage extends BasePage {
         dialogAccept.click();
     }
     public String getTitle(){
+        //Locator heading = getHeading();
         heading.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         return heading.textContent();
     }

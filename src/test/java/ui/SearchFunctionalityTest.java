@@ -7,6 +7,7 @@ import models.SearchCriteria;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.SearchResultPage;
+import retry.RetryAnalyzer;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
@@ -53,8 +54,12 @@ public class SearchFunctionalityTest extends BaseTest {
 
         step("Searching for " + guestNum + " guests in " + destination);
         SearchResultPage result = homepage.search(searchParameters);
+        System.out.println("Search complete");
         searchResult = result.getTitle();
-        result.acceptDialog();
+        System.out.println("Searched: " + searchResult);
+        if(result.isPopupPresent()){
+            result.acceptDialog();
+        }
 
         step("Search Successful!!", () ->{
              assertTrue(containsText(searchResult,destination));

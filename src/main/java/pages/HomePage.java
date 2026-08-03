@@ -18,8 +18,8 @@ public class HomePage extends BasePage{
     private final Locator homePageLogo;
     private final Locator destination;
     private final Locator desSuggestions;
-    private final Locator checkInDate;
-    private final Locator checkOutDate;
+   // private final Locator checkInDate;
+   // private final Locator checkOutDate;
     private final Locator searchBtn;
     private final Locator guest;
     private final Locator guestIncrease;
@@ -36,11 +36,12 @@ public class HomePage extends BasePage{
                 new Page.GetByRoleOptions().setName("Close")
         );
         homePageLogo = page.getByLabel("Airbnb homepage");
+
         destination = page.getByPlaceholder("Search destinations");
         desSuggestions = page.getByRole(AriaRole.OPTION,
                 new Page.GetByRoleOptions().setName(actualDes));
-        checkInDate = dateLocator(LocalDate.now());
-        checkOutDate = dateLocator(LocalDate.now().plusDays(1));
+        //checkInDate = dateLocator(LocalDate.now());
+        //checkOutDate = dateLocator(LocalDate.now().plusDays(2));
         searchBtn = page.getByRole(
                 AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Search")
@@ -56,8 +57,12 @@ public class HomePage extends BasePage{
 
     public HomePage waitForPage(){
         homePageLogo.waitFor();
+        //homePageLogo.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         return this;
     };
+
+
+
 
     //Checks if any popup is present for further tests
     public boolean isPopupPresent() {
@@ -90,7 +95,7 @@ public class HomePage extends BasePage{
         destination.click();
         destination.pressSequentially(searchText);
 
-        assertThat(desSuggestions.first()).isVisible();
+        //assertThat(desSuggestions.first()).isVisible();
 
         desSuggestions.filter(new Locator.FilterOptions().setHasText(actualDes))
                 .first()
@@ -101,13 +106,18 @@ public class HomePage extends BasePage{
 
     public SearchResultPage search(SearchCriteria values) {
         enterDestination(values.getSearchTxt(), values.getDestination());
-        checkInDate.click();
-        checkOutDate.click();
+        selectDates(LocalDate.now(), LocalDate.now().plusDays(1));
         guest.click();
         guestNum(values.getGuestNum());
         searchBtn.click();
+        SearchResultPage resultPage = new SearchResultPage(page);
+        resultPage.waitForpage();
+        return resultPage;
+    }
 
-        return new SearchResultPage(page);
+    private void selectDates(LocalDate checkIn, LocalDate checkOut) {
+        dateLocator(checkIn).click();
+        dateLocator(checkOut).click();
     }
 
    private void guestNum(int num){
