@@ -5,7 +5,7 @@ import com.microsoft.playwright.Page;
 
 import java.time.LocalDate;
 
-public class BasePage {
+public abstract class BasePage {
 
     protected final Page page;
 
@@ -54,6 +54,5 @@ public class BasePage {
     public boolean isPageLoaded(Locator locator){
         return locator.isVisible();
     }
-
 
 }

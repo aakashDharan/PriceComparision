@@ -6,6 +6,7 @@ import io.qameta.allure.Allure;
 import models.SearchCriteria;
 import org.testng.annotations.Test;
 import pages.HomePage;
+import pages.PropertyPage;
 import pages.SearchResultPage;
 import retry.RetryAnalyzer;
 
@@ -74,5 +75,13 @@ public class SearchFunctionalityTest extends BaseTest {
             //System.out.println(card.getName());
             assertFalse(card.getName().trim().isEmpty());
         }
+
+        for(PropertyCard card : cards){
+            PropertyPage property = card.open();
+            System.out.println(property.getPropertyName());
+            property.close();
+        }
     }
+
+
 }

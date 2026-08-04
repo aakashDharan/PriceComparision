@@ -43,13 +43,12 @@ public class SearchResultPage extends BasePage {
     }
 
 
-    public SearchResultPage waitForpage(){
+    public void waitForpage(){
         page.waitForURL("**/s/**");
 
         heading.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertThat(heading).not().hasText("");
 
-        return this;
     }
 
     public boolean isPopupPresent(){

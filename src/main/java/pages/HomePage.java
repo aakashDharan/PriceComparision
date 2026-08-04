@@ -55,10 +55,9 @@ public class HomePage extends BasePage{
         guestIncrease = page.getByTestId("stepper-adults-increase-button");
     }
 
-    public HomePage waitForPage(){
+    public void waitForPage(){
         homePageLogo.waitFor();
         //homePageLogo.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        return this;
     };
 
 
