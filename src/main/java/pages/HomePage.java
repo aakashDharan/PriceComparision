@@ -66,6 +66,7 @@ public class HomePage extends BasePage{
 
     //Checks if any popup is present for further tests
     public boolean isPopupPresent() {
+        waitForPage();
       if(popup.isVisible()){
           return true;
       }else{

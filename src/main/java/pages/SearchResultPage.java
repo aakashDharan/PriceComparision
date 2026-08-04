@@ -10,6 +10,8 @@ import components.PropertyCard;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+
 public class SearchResultPage extends BasePage {
 
     //private final Locator property;
@@ -45,6 +47,7 @@ public class SearchResultPage extends BasePage {
         page.waitForURL("**/s/**");
 
         heading.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertThat(heading).not().hasText("");
 
         return this;
     }
