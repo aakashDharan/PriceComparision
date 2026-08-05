@@ -1,5 +1,6 @@
 package core;
 
+import Network.NetworkMonitor;
 import com.microsoft.playwright.*;
 
 import java.util.List;
@@ -9,6 +10,7 @@ public class PlaywrightFactory {
     private static final ThreadLocal<Browser> browserThreadlocal = new ThreadLocal<>();
     private static final ThreadLocal<BrowserContext> contextThreadLocal = new ThreadLocal<>();
     private static final ThreadLocal<Page> pageThreadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<NetworkMonitor> monitor = new ThreadLocal<>();
 
     public static Page initBrowser(){
         return initBrowser(ConfigReader.browser());
@@ -24,6 +26,10 @@ public class PlaywrightFactory {
                 .setBaseURL(ConfigReader.baseUrl())
         );
 
+        NetworkMonitor networkMonitor = new NetworkMonitor();
+        networkMonitor.attach(context);
+        monitor.set(networkMonitor);
+
         context.tracing().start(new Tracing.StartOptions()
                 .setScreenshots(true)
                 .setSnapshots(true)
@@ -35,6 +41,7 @@ public class PlaywrightFactory {
 
         return page;
     }
+
 
     private static Browser launchBrowser(Playwright playwright, String browserName){
         BrowserType.LaunchOptions options = new BrowserType.LaunchOptions()
@@ -55,6 +62,10 @@ public class PlaywrightFactory {
             throw new IllegalStateException("Page not initialized for this thread - call initBrowser() first");
         }
         return page;
+    }
+
+    public static NetworkMonitor getNetworkMonitor(){
+        return monitor.get();
     }
 
     public static BrowserContext getContext(){
@@ -87,6 +98,7 @@ public class PlaywrightFactory {
                 playwright.close();
             }
         } finally{
+            monitor.remove();
             contextThreadLocal.remove();
             browserThreadlocal.remove();
             playwrightThreadLocal.remove();

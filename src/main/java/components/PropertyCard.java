@@ -2,6 +2,7 @@ package components;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Response;
 import pages.PropertyPage;
 
 public class PropertyCard {
@@ -23,8 +24,7 @@ public class PropertyCard {
             root.click();
         });
 
-       // propertytab.waitForURL("**/rooms/**");
-        //propertytab.waitForLoadState();
+        propertytab.waitForLoadState();
         return new PropertyPage(propertytab).waitForPage();
 
     }

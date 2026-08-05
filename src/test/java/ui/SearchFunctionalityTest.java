@@ -2,15 +2,12 @@ package ui;
 
 import components.PropertyCard;
 import core.BaseTest;
-import io.qameta.allure.Allure;
 import models.SearchCriteria;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.PropertyPage;
 import pages.SearchResultPage;
-import retry.RetryAnalyzer;
 
-import java.io.ByteArrayInputStream;
 import java.util.List;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -20,12 +17,16 @@ import static org.testng.Assert.*;
 //@Listeners(TestListener.class)
 public class SearchFunctionalityTest extends BaseTest {
 
+    String destination = "Canacona";
+    String searchText = "can";
+    int guestNum = 2;
+
+    PropertyPage property;
+    List<PropertyCard> cards;
 
     @Test
     public void getOntoHomePage() {
-        String destination = "Canacona";
-        String searchText = "can";
-        int guestNum = 2;
+
         String searchResult;
 
         SearchCriteria searchParameters = new SearchCriteria(searchText, destination, guestNum);
@@ -66,7 +67,7 @@ public class SearchFunctionalityTest extends BaseTest {
              assertTrue(containsText(searchResult,destination));
         });
 
-        List<PropertyCard> cards = result.getPropertyCards();
+        cards = result.getPropertyCards();
         //System.out.println(cards.get(0).getName());
 
         step("Properties are displayed.");
@@ -77,11 +78,20 @@ public class SearchFunctionalityTest extends BaseTest {
         }
 
         for(PropertyCard card : cards){
-            PropertyPage property = card.open();
+            property = card.open();
             System.out.println(property.getPropertyName());
             property.close();
         }
     }
 
+
+    @Test
+    public void checkingPropertyData(){
+        page.navigate("/rooms/1708422716504775101?adults=2&search_mode=regular_search&source_impression_id=p3_1785910144_P3ujmhGcs0KbX7mb&previous_page_section_name=1000&federated_search_id=b4b081ea-6bf8-463b-abb2-dd7f63ec01c1&guests=2&check_in=2026-08-05&check_out=2026-08-06");
+       // page.pause();
+        property = new PropertyPage(page);
+        property.waitForPage();
+        System.out.println(property.getPropertyName());
+    }
 
 }
