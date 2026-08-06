@@ -3,11 +3,15 @@ package components;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Response;
+import org.json.JSONObject;
 import pages.PropertyPage;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class PropertyCard {
     private final Locator root;
     private final Page page;
+    AtomicReference<JSONObject> graphQl = new AtomicReference<>();
 
     public PropertyCard(Locator root, Page page) {
         this.root = root;
@@ -20,12 +24,11 @@ public class PropertyCard {
     }
 
     public PropertyPage open(){
-        Page propertytab = page.context().waitForPage(() ->{
-            root.click();
-        });
+        Page propertyTab = page.context().waitForPage(root::click);
 
-        propertytab.waitForLoadState();
-        return new PropertyPage(propertytab).waitForPage();
+
+        propertyTab.waitForLoadState();
+        return new PropertyPage(propertyTab).waitForPage();
 
     }
 }

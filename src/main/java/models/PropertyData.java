@@ -4,6 +4,7 @@ public class PropertyData {
     private String name;
     private String host;
     private double rating;
+    private String maxGuest;
     private int reviewCount;
     private String price;
     private String location;
@@ -63,6 +64,15 @@ public class PropertyData {
                 "Rating = " + rating + ", " +
                 "Review Number = " + reviewCount + ", " +
                 "Location = " + location +", "+
-                "Price = " + price + "}";
+                "Price = " + price + ", " +
+                "Max Guesy = " + maxGuest +" }";
+    }
+
+    public String getMaxGuest() {
+        return maxGuest;
+    }
+
+    public void setMaxGuest(String maxGuest) {
+        this.maxGuest = maxGuest;
     }
 }

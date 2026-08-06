@@ -1,12 +1,13 @@
 package retry;
 
+import core.ConfigReader;
 import io.qameta.allure.Allure;
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
 
 public class RetryAnalyzer implements IRetryAnalyzer {
 
-    int retryCount = 0;
+    int retryCount =  ConfigReader.retryCount();
     private static final int MAX_RETRY_COUNT = 0;
 
     @Override

@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import static java.lang.Boolean.getBoolean;
+import static javax.swing.UIManager.getInt;
+
 /**
  * Loads config.properties once and exposes typed getters.
  * Keeps env/browser/base-url decisions out of test code entirely.
@@ -63,5 +66,51 @@ public class ConfigReader {
 
     public static String apiBaseUrl() {
         return get("api.base.url", baseUrl());
+    }
+
+    public static String graphqlHash() {
+        return get("graphql.hash");
+    }
+
+    public static String graphqlOperation() {
+        return get("graphql.operation");
+    }
+
+    public static String apiKey() {
+        return get("graphql.api.key");
+    }
+
+    public static String locale() {
+        return get("locale");
+    }
+
+    public static String currency() {
+        return get("currency");
+    }
+    public static int retryCount() {
+        return getInt("retry.count");
+    }
+    public static int defaultTimeout() {
+        return getInt("default.timeout");
+    }
+
+    public static int navigationTimeout() {
+        return getInt("navigation.timeout");
+    }
+    public static boolean screenshotOnFailure() {
+        return getBoolean("screenshot.on.failure");
+    }
+    public static boolean traceOnFailure() {
+        return getBoolean("trace.on.failure");
+    }
+    public static boolean videoOnFailure() {
+        return getBoolean("video.on.failure");
+    }
+    public static String screenshotPath() {
+        return get("screenshot.path");
+    }
+
+    public static String tracePath() {
+        return get("trace.path");
     }
 }

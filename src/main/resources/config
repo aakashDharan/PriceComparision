@@ -1,8 +1,49 @@
-# Environment / target app
+#################################
+# Application
+#################################
+
 base.url=https://www.airbnb.co.in
 api.base.url=https://www.airbnb.co.in/api
 
-# Browser: chromium | firefox | webkit
+#################################
+# Browser
+#################################
+
 browser=chromium
 headless=false
 slowmo.ms=0
+
+#################################
+# Retry
+#################################
+
+retry.count=2
+
+#################################
+# Timeout
+#################################
+
+default.timeout=30000
+navigation.timeout=60000
+
+#################################
+# Reporting
+#################################
+
+trace.on.failure=true
+screenshot.on.failure=true
+video.on.failure=false
+
+trace.path=traces
+screenshot.path=screenshots
+
+#################################
+# API
+#################################
+
+locale=en-IN
+currency=INR
+
+graphql.operation=StaysPdpSections
+graphql.hash=0166f94efe6e87f5da045580789c3393406b87512e8a4113647d4fad94533a5c
+graphql.api.key=d306zoyjsyarp7ifhu67rjxn52tv0t20

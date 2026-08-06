@@ -1,6 +1,5 @@
 package core;
 
-import Network.NetworkMonitor;
 import com.microsoft.playwright.*;
 
 import java.util.List;
@@ -10,7 +9,6 @@ public class PlaywrightFactory {
     private static final ThreadLocal<Browser> browserThreadlocal = new ThreadLocal<>();
     private static final ThreadLocal<BrowserContext> contextThreadLocal = new ThreadLocal<>();
     private static final ThreadLocal<Page> pageThreadLocal = new ThreadLocal<>();
-    private static final ThreadLocal<NetworkMonitor> monitor = new ThreadLocal<>();
 
     public static Page initBrowser(){
         return initBrowser(ConfigReader.browser());
@@ -19,16 +17,16 @@ public class PlaywrightFactory {
         Playwright playwright = Playwright.create();
         playwrightThreadLocal.set(playwright);
 
+        APIRequestContext apiContext = playwright.request().newContext();
+
         Browser browser = launchBrowser(playwright, browserName);
         browserThreadlocal.set(browser);
 
         BrowserContext context = browser.newContext( new Browser.NewContextOptions().setViewportSize(null)
                 .setBaseURL(ConfigReader.baseUrl())
+
         );
 
-        NetworkMonitor networkMonitor = new NetworkMonitor();
-        networkMonitor.attach(context);
-        monitor.set(networkMonitor);
 
         context.tracing().start(new Tracing.StartOptions()
                 .setScreenshots(true)
@@ -38,6 +36,8 @@ public class PlaywrightFactory {
 
         Page page = context.newPage();
         pageThreadLocal.set(page);
+        page.setDefaultTimeout(ConfigReader.defaultTimeout());
+        page.setDefaultNavigationTimeout(ConfigReader.navigationTimeout());
 
         return page;
     }
@@ -64,10 +64,6 @@ public class PlaywrightFactory {
         return page;
     }
 
-    public static NetworkMonitor getNetworkMonitor(){
-        return monitor.get();
-    }
-
     public static BrowserContext getContext(){
         return contextThreadLocal.get();
     }
@@ -92,13 +88,13 @@ public class PlaywrightFactory {
                 browser.close();
             }
 
+
             Playwright playwright = playwrightThreadLocal.get();
 
             if(playwright != null) {
                 playwright.close();
             }
         } finally{
-            monitor.remove();
             contextThreadLocal.remove();
             browserThreadlocal.remove();
             playwrightThreadLocal.remove();

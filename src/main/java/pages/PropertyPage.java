@@ -1,22 +1,28 @@
 package pages;
 
+
+
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import core.PlaywrightFactory;
-import models.PropertyData;
+
+import com.microsoft.playwright.options.AriaRole;
+import core.ConfigReader;
+
 import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import java.util.Base64;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
 
 public class PropertyPage extends BasePage {
-
+    private JSONObject propertyResponse;
 
 
     public PropertyPage(Page page) {
@@ -24,9 +30,6 @@ public class PropertyPage extends BasePage {
     }
 
 
-    public String getPropertyName() {
-        return page.locator("[data-section-id='TITLE_DEFAULT'] h1").textContent();
-    }
 
     public PropertyPage waitForPage() {
        // Locator img = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Wake up to natural light,"));
@@ -35,14 +38,23 @@ public class PropertyPage extends BasePage {
         return this;
     }
 
+    public String getPropertyName() {
+        return page.locator("[data-section-id='TITLE_DEFAULT'] h1").textContent();
+    }
 
-     public PropertyData getDetails(){
+    public String getHostName(){
+        Locator hName = page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setLevel(2));
+        return hName.textContent();
+    }
 
-         JSONObject response = PlaywrightFactory.getNetworkMonitor().getPropertyResponse();
 
+//     public PropertyData getDetails(){
+//         ApiRequest request =
+//                 createApiRequest();
+//
+//
+//     }
 
-
-     }
 
 
     public void close(){

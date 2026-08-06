@@ -1,13 +1,18 @@
 package ui;
 
+
 import components.PropertyCard;
 import core.BaseTest;
 import models.SearchCriteria;
+import org.json.JSONObject;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.PropertyPage;
 import pages.SearchResultPage;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -21,6 +26,8 @@ public class SearchFunctionalityTest extends BaseTest {
     String searchText = "can";
     int guestNum = 2;
 
+    SearchCriteria searchParameters = new SearchCriteria(searchText, destination, guestNum);
+
     PropertyPage property;
     List<PropertyCard> cards;
 
@@ -29,7 +36,6 @@ public class SearchFunctionalityTest extends BaseTest {
 
         String searchResult;
 
-        SearchCriteria searchParameters = new SearchCriteria(searchText, destination, guestNum);
         HomePage homepage = new HomePage(page);
         //SearchResultPage result = new SearchResultPage(page);
 
@@ -77,21 +83,28 @@ public class SearchFunctionalityTest extends BaseTest {
             assertFalse(card.getName().trim().isEmpty());
         }
 
-        for(PropertyCard card : cards){
-            property = card.open();
-            System.out.println(property.getPropertyName());
-            property.close();
-        }
+//        for(PropertyCard card : cards){
+//            property = card.open();
+//            System.out.println(property.getPropertyName());
+//            PropertyData details = property.getDetails();
+//            System.out.println(details);
+//            property.close();
+//        }
     }
 
 
     @Test
-    public void checkingPropertyData(){
-        page.navigate("/rooms/1708422716504775101?adults=2&search_mode=regular_search&source_impression_id=p3_1785910144_P3ujmhGcs0KbX7mb&previous_page_section_name=1000&federated_search_id=b4b081ea-6bf8-463b-abb2-dd7f63ec01c1&guests=2&check_in=2026-08-05&check_out=2026-08-06");
-       // page.pause();
-        property = new PropertyPage(page);
-        property.waitForPage();
-        System.out.println(property.getPropertyName());
+    public void checkingPropertyData() {
+        page.navigate("rooms/1708422716504775101?adults=2&search_mode=regular_search&source_impression_id=p3_1785910144_P3ujmhGcs0KbX7mb&previous_page_section_name=1000&federated_search_id=b4b081ea-6bf8-463b-abb2-dd7f63ec01c1&guests=2&check_in=2026-08-18&check_out=2026-08-19");
+
+        PropertyPage property = new PropertyPage(page);
+        String propertyName = property.getPropertyName();
+        String host = property.getHostName();
+
+        System.out.println(propertyName);
+        System.out.println(host);
+
     }
+
 
 }
