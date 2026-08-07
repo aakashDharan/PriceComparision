@@ -3,16 +3,13 @@ package ui;
 
 import components.PropertyCard;
 import core.BaseTest;
+import models.PropertyData;
 import models.SearchCriteria;
-import org.json.JSONObject;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.PropertyPage;
 import pages.SearchResultPage;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -74,6 +71,7 @@ public class SearchFunctionalityTest extends BaseTest {
         });
 
         cards = result.getPropertyCards();
+        System.out.println(cards.size());
         //System.out.println(cards.get(0).getName());
 
         step("Properties are displayed.");
@@ -83,26 +81,22 @@ public class SearchFunctionalityTest extends BaseTest {
             assertFalse(card.getName().trim().isEmpty());
         }
 
-//        for(PropertyCard card : cards){
-//            property = card.open();
-//            System.out.println(property.getPropertyName());
-//            PropertyData details = property.getDetails();
-//            System.out.println(details);
-//            property.close();
-//        }
+        for(PropertyCard card : cards){
+            property = card.open();
+            PropertyData details = property.getDetails();
+            System.out.println(details);
+            property.close();
+        }
     }
 
 
     @Test
     public void checkingPropertyData() {
-        page.navigate("rooms/1708422716504775101?adults=2&search_mode=regular_search&source_impression_id=p3_1785910144_P3ujmhGcs0KbX7mb&previous_page_section_name=1000&federated_search_id=b4b081ea-6bf8-463b-abb2-dd7f63ec01c1&guests=2&check_in=2026-08-18&check_out=2026-08-19");
-
+        page.navigate("rooms/1612942459584139048?adults=2&check_in=2026-08-10&check_out=2026-08-11&search_mode=regular_search&source_impression_id=p3_1786115721_P3O3VxjcNZAYYaJb&previous_page_section_name=1000&federated_search_id=b26765a1-307c-4b33-92f1-7723542ade96&guests=2");
+        Integer i = 3;
         PropertyPage property = new PropertyPage(page);
-        String propertyName = property.getPropertyName();
-        String host = property.getHostName();
 
-        System.out.println(propertyName);
-        System.out.println(host);
+        System.out.println(property.getDetails());
 
     }
 

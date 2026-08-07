@@ -5,20 +5,8 @@ package pages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
-import com.microsoft.playwright.options.AriaRole;
-import core.ConfigReader;
-
+import models.PropertyData;
 import org.json.JSONObject;
-
-import java.net.URI;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-
-import java.util.Base64;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 
 
 public class PropertyPage extends BasePage {
@@ -43,19 +31,111 @@ public class PropertyPage extends BasePage {
     }
 
     public String getHostName(){
-        Locator hName = page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setLevel(2));
+        Locator hName = page.locator("[data-section-id='MEET_YOUR_HOST'] h2 span ");
         return hName.textContent();
     }
 
+    public int getReviewCount(){
+        Locator reviewCountLoc = page.getByTestId("Reviews-stat-heading");
+        String reviewCount = reviewCountLoc.textContent();
+        if(reviewCount == null || reviewCount.isEmpty()){
+            return 0;
+        }
+        return Integer.parseInt(reviewCount);
+    }
 
-//     public PropertyData getDetails(){
-//         ApiRequest request =
-//                 createApiRequest();
-//
-//
-//     }
+    public double getRating(){
+        Locator ratingLoc = page.getByTestId("Rating-stat-heading");
+        String rating = ratingLoc.textContent();
+        if (rating == null || rating.isBlank()) {
+            return 0.0;
+        }
+        return Double.parseDouble(rating);
+    }
+
+    public int getPrice(){
+        Locator priceLoc = page.locator("[data-testid='book-it-hover-target'] [aria-haspopup='dialog'] span").first();
+        String price = priceLoc.textContent()
+                .replace("₹", "")
+                .replace(",", "")
+                .trim();
 
 
+        return Integer.parseInt(price);
+    }
+
+    public Integer getMaxGuest(){
+        Locator guests = page.locator("li")
+                .filter(new Locator.FilterOptions().setHasText("guest"));
+
+        if (guests.count() == 0) {
+            return 0;    // or -1 if you prefer
+        }
+
+        int guestCount = Integer.parseInt(
+                guests.textContent()
+                        .replaceAll("\\D+", "")
+        );
+
+        return guestCount;
+    }
+
+    public String getLocation(){
+//        Locator locationLoc = page.locator("[data-section-id=LOCATION_DEFAULT] div")
+//                .filter(new Locator.FilterOptions().setHasText("India"));
+        Locator locationLoc = page.locator("[data-section-id='LOCATION_DEFAULT'] div:text-matches('.*,.*,.*')");
+
+        String fullLoc =  locationLoc.textContent();
+
+        String[] loc = fullLoc.split(",");
+        return loc[0];
+    }
+
+
+     public PropertyData getDetails(){
+        PropertyData data = new PropertyData();
+        Integer maxGuest = getMaxGuest();
+        data.setHost(getHostName());
+        data.setLocation(getLocation());
+        data.setMaxGuest(maxGuest);
+        data.setName(getPropertyName());
+        data.setPrice(getPrice());
+        data.setRating(getRating());
+        data.setReviewCount(getReviewCount());
+
+        if(maxGuest>=2){
+            for(int i = 2; i<4;i++){
+                data.setGuestPrices(i,getPriceForGuest(i));
+            }
+        }
+
+
+        return data;
+     }
+    public Integer getPriceForGuest(Integer guestNum){
+        Locator selectedGuestLoc = page.locator("#GuestPicker-book_it-trigger");
+        int selectedGuest = Integer.parseInt(selectedGuestLoc
+                .textContent().replaceAll("\\D+", ""));
+
+        if (selectedGuest == guestNum) {
+            return getPrice();
+        }
+
+        Locator priceLoc = page.locator("[data-testid='book-it-hover-target'] [aria-haspopup='dialog'] span").first();
+        String oldPriceText = priceLoc.textContent();
+
+        selectedGuestLoc.click();
+        Locator plusBtnLoc = page.getByTestId("GuestPicker-book_it-form-adults-stepper-increase-button");
+        while (selectedGuest < guestNum) {
+            plusBtnLoc.click();
+            selectedGuest++;
+        }
+
+        page.waitForCondition(() -> !priceLoc.textContent().equals(oldPriceText),
+                new Page.WaitForConditionOptions().setTimeout(10000));
+
+        return getPrice();
+    }
 
     public void close(){
         page.close();

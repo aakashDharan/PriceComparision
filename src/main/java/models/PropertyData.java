@@ -1,12 +1,16 @@
 package models;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PropertyData {
     private String name;
     private String host;
     private double rating;
-    private String maxGuest;
+    private Integer  maxGuest;
+    private Map<Integer, Integer> guestPrices = new HashMap<>();
     private int reviewCount;
-    private String price;
+    private int price;
     private String location;
 
     public String getName() {
@@ -41,11 +45,11 @@ public class PropertyData {
         this.reviewCount = reviewCount;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
@@ -58,21 +62,30 @@ public class PropertyData {
     }
     @Override
     public String toString(){
-        return "PropertyData{" +
+        return "PropertyData {" +
                 "Property Name = '" + name + "', " +
                 "Host Name = '"+ host + ", " +
                 "Rating = " + rating + ", " +
+                "Prices for guest: " + guestPrices +", " +
                 "Review Number = " + reviewCount + ", " +
                 "Location = " + location +", "+
                 "Price = " + price + ", " +
-                "Max Guesy = " + maxGuest +" }";
+                "Max Guest = " + maxGuest +" }";
     }
 
-    public String getMaxGuest() {
+    public int getMaxGuest() {
         return maxGuest;
     }
 
-    public void setMaxGuest(String maxGuest) {
+    public void setMaxGuest(int maxGuest) {
         this.maxGuest = maxGuest;
+    }
+
+    public Map<Integer, Integer> getGuestPrices() {
+        return guestPrices;
+    }
+
+    public void setGuestPrices(Integer key, Integer value) {
+        guestPrices.put(key,value);
     }
 }
