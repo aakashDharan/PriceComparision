@@ -5,6 +5,7 @@ package pages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
+import com.microsoft.playwright.TimeoutError;
 import models.PropertyData;
 import org.json.JSONObject;
 
@@ -15,14 +16,18 @@ public class PropertyPage extends BasePage {
 
     public PropertyPage(Page page) {
         super(page);
+        System.out.println("constructor called");
     }
 
 
 
     public PropertyPage waitForPage() {
+        System.out.println("wait for Pae called");
        // Locator img = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Wake up to natural light,"));
         Locator img = page.locator("[id='FMP-target']");
+        System.out.println("Image located");
         img.waitFor();
+        System.out.println("Image waited for");
         return this;
     }
 
@@ -32,6 +37,7 @@ public class PropertyPage extends BasePage {
 
     public String getHostName(){
         Locator hName = page.locator("[data-section-id='MEET_YOUR_HOST'] h2 span ");
+        System.out.println(1);
         return hName.textContent();
     }
 
@@ -41,6 +47,7 @@ public class PropertyPage extends BasePage {
         if(reviewCount == null || reviewCount.isEmpty()){
             return 0;
         }
+        System.out.println(2);
         return Integer.parseInt(reviewCount);
     }
 
@@ -50,6 +57,7 @@ public class PropertyPage extends BasePage {
         if (rating == null || rating.isBlank()) {
             return 0.0;
         }
+        System.out.println(3);
         return Double.parseDouble(rating);
     }
 
@@ -60,7 +68,7 @@ public class PropertyPage extends BasePage {
                 .replace(",", "")
                 .trim();
 
-
+        System.out.println(4);
         return Integer.parseInt(price);
     }
 
@@ -69,14 +77,14 @@ public class PropertyPage extends BasePage {
                 .filter(new Locator.FilterOptions().setHasText("guest"));
 
         if (guests.count() == 0) {
-            return 0;    // or -1 if you prefer
+            return -1;    // or -1 if you prefer
         }
 
         int guestCount = Integer.parseInt(
                 guests.textContent()
                         .replaceAll("\\D+", "")
         );
-
+        System.out.println(5);
         return guestCount;
     }
 
@@ -88,12 +96,15 @@ public class PropertyPage extends BasePage {
         String fullLoc =  locationLoc.textContent();
 
         String[] loc = fullLoc.split(",");
+        System.out.println(6);
         return loc[0];
     }
 
 
      public PropertyData getDetails(){
-        PropertyData data = new PropertyData();
+         PropertyData data = new PropertyData();
+        System.out.println("GET PROPERTY CALLED");
+
         Integer maxGuest = getMaxGuest();
         data.setHost(getHostName());
         data.setLocation(getLocation());
@@ -103,10 +114,12 @@ public class PropertyPage extends BasePage {
         data.setRating(getRating());
         data.setReviewCount(getReviewCount());
 
-        if(maxGuest>=2){
+        if(maxGuest>2){
             for(int i = 2; i<4;i++){
                 data.setGuestPrices(i,getPriceForGuest(i));
             }
+        }else{
+            data.setGuestPrices(2,getPriceForGuest(2));
         }
 
 
@@ -131,8 +144,12 @@ public class PropertyPage extends BasePage {
             selectedGuest++;
         }
 
-        page.waitForCondition(() -> !priceLoc.textContent().equals(oldPriceText),
-                new Page.WaitForConditionOptions().setTimeout(10000));
+        try {
+            page.waitForCondition(() -> !priceLoc.textContent().equals(oldPriceText),
+                    new Page.WaitForConditionOptions().setTimeout(1000));
+        } catch (TimeoutError e) {
+            return getPrice();
+        }
 
         return getPrice();
     }

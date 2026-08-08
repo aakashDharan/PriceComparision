@@ -92,11 +92,13 @@ public class SearchFunctionalityTest extends BaseTest {
 
     @Test
     public void checkingPropertyData() {
-        page.navigate("rooms/1612942459584139048?adults=2&check_in=2026-08-10&check_out=2026-08-11&search_mode=regular_search&source_impression_id=p3_1786115721_P3O3VxjcNZAYYaJb&previous_page_section_name=1000&federated_search_id=b26765a1-307c-4b33-92f1-7723542ade96&guests=2");
+        page.navigate("rooms/1570019304345419706?adults=2&check_in=2026-08-09&check_out=2026-08-10&search_mode=regular_search&category_tag=Tag%3A8678&photo_id=2447276647&source_impression_id=p3_1786212646_P3o5SxxwYdsMKXAb&previous_page_section_name=1000&federated_search_id=8fcba9b4-f448-474b-82e8-1b549e33f2d0");
         Integer i = 3;
         PropertyPage property = new PropertyPage(page);
 
-        System.out.println(property.getDetails());
+        System.out.println(property.getPropertyName());
+        PropertyData page = property.getDetails();
+        System.out.println(page);
 
     }
 
